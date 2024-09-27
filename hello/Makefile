@@ -7,4 +7,5 @@ hello.o: hello.cpp
 	g++ -c hello.cpp
 
 clean :
-	rm *.o hello.exe
+	rm -f *.o
+	rm -f hello.exe 
