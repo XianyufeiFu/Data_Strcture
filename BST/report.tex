@@ -1,0 +1,84 @@
+
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{付逸飞，3230105655}
+\chead{数据结构与算法第四次作业}
+\rhead{Nov.4th, 2024}
+
+\section{remove函数的实现和测试思路}
+
+\begin{itemize}
+\item remove设计思路
+\item 首先我实现了detachMin函数，
+\item 里面先递归地找到最小节点的位置
+\item 再判断它右边是否还有节点，如果有就替换为右边的节点，没有就替换为左边的nullptr
+\item 同时oldNode用于删除节点，Node用于保存数据，然后返回这个数据
+\item 然后detachMin函数实现后，remove中有两个节点的节点删除只需要替换其中的元素即可
+
+\end{itemize}
+
+\section{测试的结果}
+我插入了一个数，打印了一个为1、2、6、7、9、12、13、20的树，根节点为9
+
+删除1之后，打印为2、6、7、9、12、13、20
+
+再删除6之后，打印为2、7、9、12、13、20
+
+之后删除12后，显示为2、7、9、13、20
+
+接着先后插入了12，11两个节点
+
+再删除根节点9后、打印为2、7、11、12、13、20
+
+最后删除节点12，打印为2、7、11、13、20
+
+测试结果一切正常，均为前序遍历的结果。
+
+我用 valgrind 进行测试，没有发现内存泄露。
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
