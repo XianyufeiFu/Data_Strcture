@@ -71,7 +71,7 @@ public:
                 flag4 = 1;
             }
             else if((a >= '0' && a <= '9')){
-                if(a == '0') my_switch = 1;
+                my_switch = 1;
                 if(flag2 == 0 && flag3 == 0){
                     v1 = 10 * v1 + a - '0';
                 }
@@ -89,14 +89,14 @@ public:
             }
             else 
             {
-                if(v1 != 0 || v2 != 0){
-                    my_switch = 1;
-                }
-                else if(!is_operator(last_ch)){
-                    if(last_ch > 0){
-                        my_switch = 1;                    
-                    }
-                }
+                // if(v1 != 0 || v2 != 0){
+                //     my_switch = 1;
+                // }
+                // else if(!is_operator(last_ch)){
+                //     if(last_ch > 0){
+                //         my_switch = 1;                    
+                //     }
+                // }
                 if(my_switch){
                     if(flag3 == 0)
                         v = flag1 * (v1 + v2);
@@ -122,6 +122,7 @@ public:
                     flag3 = 0;
                     flag4 = 0;
                     mi = 0;
+                    my_switch = 0;
                 }
                 Node p;
                 if(a == '+' || a == '-')
@@ -229,6 +230,10 @@ public:
                     Node p = op_stack.pop_stack();
                     // cout << endl << p->ch;
                     while(p.ch != '('){
+                        if(p.ch == '#'){
+                            correct_flag = 0;
+                            return;
+                        }
                         rechanged_stack.push_stack(p);
                         p = op_stack.pop_stack();
                     }
@@ -250,6 +255,10 @@ public:
             // op_stack.print_stack();
         }
         while(op_stack.my_stack[op_stack.len-1].ch != '#'){
+            if(op_stack.my_stack[op_stack.len-1].ch == '('){
+                correct_flag = 0;
+                return;
+            }
             rechanged_stack.push_stack(op_stack.pop_stack());
         }
     }
@@ -261,26 +270,26 @@ public:
         if(!calculate_stack.is_empty()){
             a = calculate_stack.pop_stack();
             if(a.priority != -1){
-                cout << "Invalid Formula!" << endl;
+                // cout << "Invalid Formula!" << endl;
                 correct_flag = 0;
                 return 0; 
             }
         }
         else{
-            cout << "Invalid Formula!" << endl;
+            // cout << "Invalid Formula!" << endl;
             correct_flag = 0;
             return 0; 
         }
         if(!calculate_stack.is_empty()){
             b = calculate_stack.pop_stack();
             if(b.priority != -1){
-                cout << "Invalid Formula!" << endl;
+                // cout << "Invalid Formula!" << endl;
                 correct_flag = 0;
                 return 0; 
             }
         }
         else{
-            cout << "Invalid Formula!" << endl;
+            // cout << "Invalid Formula!" << endl;
             correct_flag = 0;
             return 0;
         }
@@ -295,6 +304,10 @@ public:
             result = a.value * b.value;
         }
         else if(ch == '/'){
+            if(a.value == 0){
+                correct_flag = 0;
+                return 0;
+            }
             result = b.value / a.value;
         }
         Node c = {-1, 0 , result};
@@ -315,7 +328,7 @@ public:
             // calculate_stack.print_stack();
         }
         if(calculate_stack.len != 1){
-            cout << "Invalid Formula!" << endl;
+            // cout << "Invalid Formula!" << endl;
             correct_flag = 0;
             return -1; 
         }
@@ -327,9 +340,9 @@ public:
     void print_result(){
         double result = calculate();
         if(correct_flag)
-            cout << result << endl;
+            cout << result << endl << endl;
         else{
-            cout << "No result!";
+            cout << "ILLEGAL" << endl << endl;
         }
     }
 
@@ -346,6 +359,7 @@ public:
     }
 
     void clear(){
+        correct_flag = 1;
         original_stack.clear_stack();
         op_stack.clear_stack();
         rechanged_stack.clear_stack();
