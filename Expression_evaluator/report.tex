@@ -1,0 +1,78 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{geometry, CJKutf8}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+
+% useful packages.
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\usepackage{listings}
+\usepackage{float, caption}
+
+\lstset{
+    basicstyle=\ttfamily, basewidth=0.5em
+}
+
+% some common command
+\newcommand{\dif}{\mathrm{d}}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\difFrac}[2]{\frac{\dif #1}{\dif #2}}
+\newcommand{\pdfFrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\OFL}{\mathrm{OFL}}
+\newcommand{\UFL}{\mathrm{UFL}}
+\newcommand{\fl}{\mathrm{fl}}
+\newcommand{\op}{\odot}
+\newcommand{\Eabs}{E_{\mathrm{abs}}}
+\newcommand{\Erel}{E_{\mathrm{rel}}}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhead{}
+\lhead{付逸飞, 3230105655}
+\chead{数据结构与算法项目作业}
+\rhead{Dec.7th, 2024}
+
+
+\section{四则混合运算器的设计思路}
+
+整体设计程序时，我将程序拆分为大致三个板块————输入，中缀表达式转化（\texttt{rechange\_original}函数）,计算。
+其中输入部分比较麻烦，本次项目作业的难度也集中在这个部分，需要将一个读进来的字符串转化为一个单独的字符和数，同时如何同时储存数和字符也遇到了困难。
+为了方便后续处理和调试，我没有用STL里面的stack,而是自己写了一个结构体数组来模拟stack，因为这样既可以从前往后一顺遍历同时又可以模拟stack，比较方便。
+至于为什么用结构体，因为一开始我忘了指针也能开数组hhh，所以就没用指针，然后结构体里边只有单独的三个变量，用起来也比较方便可以减少出现一些奇奇怪怪的错误。
+结构体里面的三个变量分别为priority、ch（存操作符）和value（存数字数值）。数字的优先级我设为最低为-1，只是方便了识别。\par
+
+输入函数\texttt{read\_original}的思路主要是遇到不同的情况分别讨论，遇到数字则用一个v来记录以读入数字的数字，然后遇到操作符则将累计读入的数压入stack中。
+遇到操作符则直接读入，然后就是一些读入负数、小数和科学计数法的处理，主要是用了几个flag判断是哪种情况，分别处理。
+同时也识别一些显然的非法输入，比如连续两个e或者小数点这些。\par
+
+后面两个函数设计思路则与老师上课的时候一样了。\texttt{rechange\_original}函数遇到数字则将数字压入rechange\_stack中，遇到操作符则压入单独的op\_stack中。
+当要压入的操作符比栈顶的元素优先级低时，不断弹出元素进rechange\_stack中知道比栈顶元素优先级低或相同再压入，左括号优先级为0在操作符中最低，只有右括号能与其配对。
+原读入的序列结束时，将剩余的栈中操作符一次pop进rechange\_stack中。顺便检查有无剩余括号，如有则立马退出并标记。\par
+
+最后的是计算这个后缀表达式了（\texttt{calculate}函数）这个比较简单，将原来的rechange\_stack从前往后遍历，遇到数字直接压入calculate\_stack中，
+遇到操作符pop出两个数进行运算，不够则判断为非法式子并退出，最后若剩余超过一个数也判断非法，这样基本能检测出表达式的正误了。
+
+\section{相关说明}
+
+程序将来连续两个-号视为合法，前一个为-后一个表示负数，其他如++、**、-+均视为非法。\par
+程序科学计数法e后只能为整数，能识别负数但不能在e后加其他操作符。\par
+程序将式子中含有除e、.、数字和操作符（+、-、*、/）以外的字符均视为非法。\par
+小数点.前必须有数字，否则视为非法。
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
