@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stack>
+// #include <stack>
 using namespace std;
     
 struct Node
@@ -12,6 +12,8 @@ struct Node
 bool is_operator(char c){
     return (c == '+' || c == '-' || c == '/' || c == '*' || c == '(' || c == ')'); 
 }
+
+bool correct_flag = 1;
 
 double my_pow(double t, int k){
     if(k == 0) return 1;
@@ -62,9 +64,21 @@ public:
             // if(a == ' ') continue;
             
             if(a == '.'){
+                if(flag2){
+                    correct_flag = 0;
+                    return;
+                }
+                if(!my_switch){
+                    correct_flag = 0;
+                    return;
+                }
                 flag2 = 1;
             }
             else if( a == 'e'){
+                if(flag3){
+                    correct_flag = 0;
+                    return;
+                }
                 flag3 = 1;
             }
             else if(last_ch == 'e' && a == '-'){
@@ -85,10 +99,22 @@ public:
                 // cout << a;
             }
             else if(((last_ch == -1 || is_operator(last_ch)) && last_ch != ')') && a == '-'){
+                if(flag1 == -1){
+                    correct_flag = 0;
+                    return;
+                }
                 flag1 = -1;
             }
             else 
             {
+                if(!is_operator(a)){
+                    correct_flag = 0;
+                    return;
+                }
+                if(last_ch == 'e'){
+                    correct_flag = 0;
+                    return;
+                }
                 // if(v1 != 0 || v2 != 0){
                 //     my_switch = 1;
                 // }
@@ -196,8 +222,6 @@ public:
 
 };
 
-
-
 class Expression_Evaluator
 {
 public: 
@@ -262,8 +286,6 @@ public:
             rechanged_stack.push_stack(op_stack.pop_stack());
         }
     }
-
-    bool correct_flag = 1;
 
     bool operation(char ch){
         Node a,b;
@@ -364,6 +386,14 @@ public:
         op_stack.clear_stack();
         rechanged_stack.clear_stack();
         calculate_stack.clear_stack();
+    }
+
+    void do_all(string s){
+        cout<< s << endl;
+        read_original(s);
+        if(correct_flag) expression_change();
+        print_result();
+        clear();
     }
 
 };
