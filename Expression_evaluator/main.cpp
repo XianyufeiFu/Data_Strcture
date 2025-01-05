@@ -87,7 +87,7 @@ int main(){
     s = ".21-1";
     a.do_all(s);
 
-    while(1);
+    // while(1);
 
     return 0;
 
